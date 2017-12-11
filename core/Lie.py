@@ -41,7 +41,8 @@ class LieLayer(Layer):
             if(i == self.order):
                 continue
             xext_vectors = tf.expand_dims(tmp, -1)
-            x_extend_matrix = tf.batch_matmul(x_vectors, xext_vectors, adj_x=False, adj_y=True)
+            # x_extend_matrix = tf.batch_matmul(x_vectors, xext_vectors, adj_x=False, adj_y=True)
+            x_extend_matrix = tf.matmul(x_vectors, xext_vectors, adjoint_a=False, adjoint_b=True)
             tmp = tf.reshape(x_extend_matrix, [-1, self.nsizes[i+1]])
         
         return ans
