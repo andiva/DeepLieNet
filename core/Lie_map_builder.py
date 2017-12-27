@@ -3,7 +3,7 @@ import sympy as sp
 from sympy import Symbol, expand
 
 
-def getKronPowers(state, order):
+def getKronPowers(state, order, dim_reduction = True):
     """Calculates Kroneker powers of state vector
        with dimension reduction
 
@@ -16,9 +16,15 @@ def getKronPowers(state, order):
     powers = [state]
     index = [np.ones(len(state), dtype=bool)]
     for i in xrange(order-1):
-        reduced, red_ind = reduce(np.kron(powers[-1], state)) 
-        powers.append(reduced)
+        state_i = np.kron(powers[-1], state)
+        reduced, red_ind = reduce(state_i)
+        if dim_reduction:
+            powers.append(reduced)
+        else:
+            powers.append(state_i)
+            
         index.append(red_ind)
+
     powers.insert(0, np.array([1]))
     index.insert(0, [True])
     return powers, index 
@@ -84,7 +90,8 @@ class LieMapBuilder:
         print(right_hand_side)
 
         self.Order = order
-        self.X, self.index = getKronPowers(state, order=order)      
+        self.X, self.index = getKronPowers(state, order=order) 
+        _,self.index_full = getKronPowers(state, order=order, dim_reduction=False)     
         
         self.P = []
         for X in self.X:
@@ -164,7 +171,8 @@ class LieMapBuilder:
         W = []
 
         m = 1
-        for ind, Rk in zip(self.index, R):
+
+        for ind, Rk in zip(self.index_full, R):
             w = np.zeros((self.StateSize, m))
             m*=self.StateSize
             w[:, ind] = Rk
