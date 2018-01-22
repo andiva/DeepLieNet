@@ -84,8 +84,20 @@ def main():
     map.set_weights(W)
 
     X0 = np.array([[1,1,0,0,0,0,1,0,1,1,0],
-                   [1,1,0,0,1,0,1,0,0,1,0]],
+                   [0,0,1,0,0,0,1,0,1,1,0],
+                   [0,0,0,1,0,0,1,0,0,1,0],
+                   [1,0,0,0,1,1,1,0,0,1,0],
+                   [1,0,0,0,0,1,0,1,0,1,0],
+                   [1,0,0,0,0,0,0,1,0,0,1],
+                   [1,0,0,0,1,0,1,0,0,0,1],
+                   [1,1,0,0,1,0,1,0,0,1,0],
+                   [0,0,1,0,1,0,1,0,0,1,0],
+                   [0,0,1,0,0,0,0,1,0,1,0],
+                   [1,1,0,0,0,0,0,1,0,1,0],
+                   [1,0,0,0,0,0,1,0,1,0,1],
+                   [1,0,0,0,0,1,1,0,1,1,0]],
                   dtype=float).reshape((-1, 11))
+    
 
     X = []
     X.append(X0)
@@ -98,6 +110,13 @@ def main():
 
     X = np.array(X)
     print X.shape
+    steady_state = X[-1,:, :]
+
+    # compare with the article results
+    mean = np.mean(steady_state, axis=0)
+    std = np.std(steady_state, axis=0)
+
+    print np.vstack((mean, std)).T
 
     fig, ax = plt.subplots(1, 2)
     for i in xrange(2):
